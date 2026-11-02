@@ -18,6 +18,11 @@ import { MemoryGallery } from './MemoryGallery'
 import { MuseumEnvironment } from './MuseumEnvironment'
 import { SpecialCorner } from './SpecialCorner'
 import { ThirdPersonCamera } from './ThirdPersonCamera'
+import { loadCharacter } from './characters/characterCache'
+import { characters } from '../../data/museumConfig'
+
+// Start sculpting the characters as soon as the 3D scene code arrives
+const charactersReady = Promise.all([loadCharacter(characters.player.appearance), loadCharacter(characters.companion.appearance)])
 
 /** Pre-compiles shaders once everything has loaded, then flags the scene ready. */
 function Ready() {
@@ -25,10 +30,21 @@ function Ready() {
   const get = useThree((s) => s.get)
   const setSceneReady = useGameStore((s) => s.setSceneReady)
   useEffect(() => {
-    gl.compile(scene, camera)
-    setSceneReady()
+    let live = true
+    // Wait for the sculpted characters so she never sees them pop in
+    charactersReady
+      .catch(() => undefined)
+      .then(() => new Promise((r) => setTimeout(r, 50)))
+      .then(() => {
+        if (!live) return
+        gl.compile(scene, camera)
+        setSceneReady()
+      })
     // Dev-only handle for debugging from the browser console
     if (import.meta.env.DEV) (window as unknown as { __museum: unknown }).__museum = { get }
+    return () => {
+      live = false
+    }
   }, [gl, scene, camera, setSceneReady, get])
   return null
 }

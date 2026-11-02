@@ -6,8 +6,8 @@
  */
 
 /**
- * Look of the built-in stylised characters. Her outfit is a hijab over a
- * long printed dress; his is a kaftan with trousers and an embroidered cap.
+ * Look of the built-in sculpted characters (see female_ref.jpeg / male_ref.jpeg).
+ * Her: hijab, nurse scrubs, trousers, clogs. Him: kaftan, trousers, cap, sandals.
  */
 export interface ProceduralAppearance {
   body: 'female' | 'male'
@@ -18,13 +18,13 @@ export interface ProceduralAppearance {
   hair: string
   /** Her hijab / his cap */
   headwear: string
-  /** Lace dots on the hijab / zig-zag embroidery on the cap */
+  /** Hijab fold shade / embroidery on his cap */
   headwearPattern: string
-  /** Her dress base (stripes) / his kaftan */
+  /** Her scrubs / his kaftan */
   outfit: string
-  /** Her dress print / his kaftan embroidery */
+  /** Pocket, badge & seam trims */
   outfitPattern: string
-  /** Her print centres / his trousers */
+  /** Trousers */
   outfitAccent: string
   shoes: string
   /** Overall height multiplier (1 ≈ 1.65 m for her, 1.75 m for him) */
@@ -74,19 +74,19 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
     position: [0, 0, 17.6],
     maxSpeed: 2.9,
     animations: { walkSpeed: 1.4, runSpeed: 3.5 },
-    // White hijab + red/gold Ankara maxi dress (from photo-012)
+    // Maroon hijab, maroon nurse scrubs, navy trousers, white clogs (female_ref.jpeg)
     appearance: {
       body: 'female',
-      skin: '#8a5638',
-      lips: '#7c3a3c',
-      eyes: '#3d2316',
+      skin: '#a46c4c',
+      lips: '#b4636b',
+      eyes: '#4a2b1b',
       hair: '#1a1110',
-      headwear: '#f6f5fa',
-      headwearPattern: '#c7cbe6',
-      outfit: '#dd9b36',
-      outfitPattern: '#d41c34',
-      outfitAccent: '#27307a',
-      shoes: '#f3eee8',
+      headwear: '#5c1528',
+      headwearPattern: '#4a1020',
+      outfit: '#601a2c',
+      outfitPattern: '#481222',
+      outfitAccent: '#1d2848',
+      shoes: '#f3f3f1',
       height: 1,
     },
   },
@@ -99,19 +99,19 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
     position: [1.1, 0, 18.6],
     maxSpeed: 3.6,
     animations: { walkSpeed: 1.4, runSpeed: 3.5 },
-    // Royal-blue kaftan + embroidered cap (from photos 005 / 006)
+    // White kaftan & trousers, embroidered cap, sandals (male_ref.jpeg)
     appearance: {
       body: 'male',
-      skin: '#5e3925',
-      lips: '#5b2d29',
-      eyes: '#2a170e',
-      hair: '#120b09',
-      headwear: '#1f2f68',
-      headwearPattern: '#e9e7f2',
-      outfit: '#2546a3',
-      outfitPattern: '#4c6cc9',
-      outfitAccent: '#22408f',
-      shoes: '#3b2a22',
+      skin: '#5a3523',
+      lips: '#5e302c',
+      eyes: '#2b1810',
+      hair: '#141010',
+      headwear: '#e6e5ea',
+      headwearPattern: '#585b64',
+      outfit: '#e9e9ec',
+      outfitPattern: '#c2c2ca',
+      outfitAccent: '#dedee3',
+      shoes: '#6b4a33',
       height: 1,
     },
   },
