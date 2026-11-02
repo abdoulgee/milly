@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-script: 'Great Vibes', cursive;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream: #fbf4ec;
+  --color-blush: #f6dcdc;
+  --color-petal: #f2a9bb;
+  --color-rose: #d27088;
+  --color-rosegold: #c98f7e;
+  --color-plum: #6f4a57;
+  --color-lavender: #e3d9f3;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #f3e3dc;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  font-family: var(--font-sans);
+  color: var(--color-plum);
+}
+
+/* Frosted glass surface used by buttons, pills and panels */
+@utility glass {
+  background: rgba(255, 249, 245, 0.66);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 28px rgba(140, 80, 100, 0.16);
+}
+
+/* Rose-gold call-to-action */
+@utility btn-rose {
+  background: linear-gradient(135deg, #f0a3b5 0%, #d9798f 55%, #c98f7e 100%);
+  color: #fff;
+  box-shadow:
+    0 10px 30px rgba(210, 112, 136, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+@utility safe-top {
+  padding-top: max(env(safe-area-inset-top), 14px);
+}
+@utility safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 18px);
+}
