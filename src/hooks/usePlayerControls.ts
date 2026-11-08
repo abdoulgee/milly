@@ -7,6 +7,7 @@ import { useEffect, useRef, type RefObject, type MutableRefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { CharacterConfig } from '../data/museumConfig'
+import { memories } from '../data/memories'
 import { BENCH_SEATS, resolveCollisions } from '../components/game/MuseumLayout'
 import type { MotionState } from '../components/game/characters/motion'
 import { angleDelta, clamp, damp, dampAngle, easeInOutCubic } from '../lib/math'
@@ -98,6 +99,7 @@ export function usePlayerControls(
     m.speed = damp(m.speed, p.speed, 14, dt)
     m.turnRate = state.current.turnRate
     chatPose(m, p.position, p.yaw, runtime.companion.position, 'her', p.idleTime > 0.4)
+    admirePose(m, p.position, p.yaw, p.idleTime)
 
     if (p.speed > 0.6 && !useGameStore.getState().hasMoved) useGameStore.getState().markMoved()
   })
@@ -211,6 +213,24 @@ export function chatPose(
   }
   const rel = angleDelta(yaw, Math.atan2(other.x - self.x, other.z - self.z))
   m.lookYaw = still ? rel : speaker === me ? rel * 0.4 : 0
+}
+
+const memoryById = new Map(memories.map((mem) => [mem.id, mem]))
+
+/**
+ * Standing still at a photo she's facing: she looks up at it and admires it
+ * (the visual adds clasped hands and a smile). While he's talking she still
+ * turns to him.
+ */
+function admirePose(m: MotionState, self: THREE.Vector3, yaw: number, idle: number) {
+  const near = useGameStore.getState().nearby
+  const mem = near?.kind === 'memory' ? memoryById.get(near.id) : undefined
+  m.admire = 0
+  if (!mem || idle < 0.6 || runtime.seat.phase !== 'none') return
+  const rel = angleDelta(yaw, Math.atan2(mem.position[0] - self.x, mem.position[2] - self.z))
+  if (Math.abs(rel) > 1.9) return // the photo is behind her
+  m.admire = 1
+  if (runtime.chat.speaker !== 'him') m.lookYaw = clamp(rel, -1.1, 1.1)
 }
 
 const KEYMAP: Record<string, keyof typeof runtime.input.keys> = {

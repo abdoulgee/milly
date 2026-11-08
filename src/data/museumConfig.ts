@@ -44,6 +44,13 @@ export interface CharacterAnimationConfig {
 
 export interface CharacterConfig {
   /**
+   * URL of a VRM avatar (VRoid-style humanoid), e.g. "/characters/her.vrm".
+   * Takes priority over `model`. Built by scripts/build-characters.py from the
+   * CC0 VRoid base avatars and dressed at runtime (hijab / kaftan / cap) from
+   * `appearance`. `null` falls back to `model` / the sculpted character.
+   */
+  vrm: string | null
+  /**
    * URL of a rigged GLB/glTF model, e.g. "/characters/female.glb".
    * `null` uses the built-in procedural character. If the model fails to
    * load, the procedural character is used automatically.
@@ -67,6 +74,7 @@ export interface CharacterConfig {
 export const characters: { player: CharacterConfig; companion: CharacterConfig } = {
   // Female, player-controlled
   player: {
+    vrm: '/characters/her.vrm',
     model: null, // e.g. '/characters/female.glb'
     scale: 1,
     rotationOffset: 0,
@@ -92,6 +100,7 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
   },
   // Male, autonomous companion
   companion: {
+    vrm: '/characters/him.vrm',
     model: null, // e.g. '/characters/male.glb'
     scale: 1,
     rotationOffset: 0,
@@ -99,19 +108,21 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
     position: [1.1, 0, 18.6],
     maxSpeed: 3.6,
     animations: { walkSpeed: 1.4, runSpeed: 3.5 },
-    // White kaftan & trousers, embroidered cap, sandals (male_ref.jpeg)
+    // Senator wear: charcoal knee-length top & trousers with silver embroidery,
+    // matching embroidered cap, dark brown shoes. (The top/trouser texture
+    // colours are baked by scripts/build-characters.py — keep them in sync.)
     appearance: {
       body: 'male',
       skin: '#5a3523',
       lips: '#5e302c',
       eyes: '#2b1810',
       hair: '#141010',
-      headwear: '#e6e5ea',
-      headwearPattern: '#585b64',
-      outfit: '#e9e9ec',
-      outfitPattern: '#c2c2ca',
-      outfitAccent: '#dedee3',
-      shoes: '#6b4a33',
+      headwear: '#30333c',
+      headwearPattern: '#a7a8b1',
+      outfit: '#2d3039',
+      outfitPattern: '#a7a8b1',
+      outfitAccent: '#2d3039',
+      shoes: '#2b1e17',
       height: 1,
     },
   },

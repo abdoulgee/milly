@@ -23,12 +23,12 @@ export const palette = {
 const std = (params: THREE.MeshStandardMaterialParameters) => new THREE.MeshStandardMaterial(params)
 
 export const materials = {
-  wall: std({ color: '#f3e6da', roughness: 0.92 }),
-  wallLavender: std({ color: '#ece3f6', roughness: 0.92 }),
-  wallBlush: std({ color: '#f7e1df', roughness: 0.92 }),
-  wainscot: std({ color: '#ecc6c4', roughness: 0.8 }),
-  ceiling: std({ color: '#fbf5ee', roughness: 1 }),
-  trim: std({ color: '#f7ede2', roughness: 0.6 }),
+  wall: std({ color: '#e9dccd', roughness: 0.95 }),
+  wallLavender: std({ color: '#e6dcef', roughness: 0.95 }),
+  wallBlush: std({ color: '#f1dcd7', roughness: 0.95 }),
+  wainscot: std({ color: '#d7b8b0', roughness: 0.7 }),
+  ceiling: std({ color: '#cdbdac', roughness: 1 }),
+  trim: std({ color: '#f3e9de', roughness: 0.55 }),
   roseGold: std({ color: '#ecb7a6', metalness: 0.6, roughness: 0.3 }),
   gold: std({ color: palette.gold, metalness: 0.9, roughness: 0.26 }),
   brass: std({ color: '#c9a464', metalness: 0.85, roughness: 0.35 }),

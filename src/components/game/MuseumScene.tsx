@@ -4,6 +4,7 @@
  */
 import { Suspense, useEffect, useState } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
+import * as THREE from 'three'
 import { PerformanceMonitor, useProgress } from '@react-three/drei'
 import { useGameStore } from '../../store/gameStore'
 import { BirthdayCorner } from './BirthdayCorner'
@@ -19,10 +20,41 @@ import { MuseumEnvironment } from './MuseumEnvironment'
 import { SpecialCorner } from './SpecialCorner'
 import { ThirdPersonCamera } from './ThirdPersonCamera'
 import { loadCharacter } from './characters/characterCache'
-import { characters } from '../../data/museumConfig'
+import { loadVRM } from './characters/vrm/loadVRM'
+import { characters, type CharacterConfig } from '../../data/museumConfig'
 
-// Start sculpting the characters as soon as the 3D scene code arrives
-const charactersReady = Promise.all([loadCharacter(characters.player.appearance), loadCharacter(characters.companion.appearance)])
+// Start loading (VRM) or sculpting (fallback) the characters as soon as the 3D scene code arrives
+const prepare = (c: CharacterConfig) => (c.vrm ? loadVRM(c.vrm).catch(() => loadCharacter(c.appearance)) : loadCharacter(c.appearance))
+const charactersReady = Promise.all([prepare(characters.player), prepare(characters.companion)])
+
+/**
+ * Furniture & props near the floor cast soft shadows too (benches, plants,
+ * pedestals…) so nothing looks like it floats. Big architecture, wall art
+ * and see-through things are skipped. The key light's shadow box only
+ * covers the area around the two of us, so this stays cheap.
+ */
+function enablePropShadows(scene: THREE.Object3D) {
+  const box = new THREE.Box3()
+  const size = new THREE.Vector3()
+  scene.updateMatrixWorld(true)
+  scene.traverse((o) => {
+    const mesh = o as THREE.Mesh
+    if (!mesh.isMesh || (mesh as THREE.SkinnedMesh).isSkinnedMesh) return
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+    if (mats.some((m) => m.transparent || (m as THREE.MeshBasicMaterial).isMeshBasicMaterial)) return
+    if ((mesh as THREE.InstancedMesh).isInstancedMesh) {
+      mesh.geometry.computeBoundingBox()
+      box.copy(mesh.geometry.boundingBox!)
+      if (box.getSize(size).y > 3 || box.max.y > 3) return
+      mesh.castShadow = true
+      return
+    }
+    box.setFromObject(mesh)
+    box.getSize(size)
+    if (size.x > 3 || size.z > 3 || size.y > 3.2 || box.min.y > 2.4 || size.y < 0.04) return
+    mesh.castShadow = true
+  })
+}
 
 /** Pre-compiles shaders once everything has loaded, then flags the scene ready. */
 function Ready() {
@@ -37,6 +69,7 @@ function Ready() {
       .then(() => new Promise((r) => setTimeout(r, 50)))
       .then(() => {
         if (!live) return
+        enablePropShadows(scene)
         gl.compile(scene, camera)
         setSceneReady()
       })
@@ -69,6 +102,7 @@ export default function MuseumScene() {
     <Canvas
       className="!fixed inset-0 touch-none"
       dpr={dpr}
+      shadows={{ type: THREE.PCFShadowMap }}
       frameloop={playing ? 'always' : 'demand'}
       gl={{ antialias: true, powerPreference: 'high-performance', stencil: false }}
       camera={{ fov: 55, near: 0.1, far: 90, position: [0, 5.4, 21.4] }}

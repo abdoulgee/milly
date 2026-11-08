@@ -39,10 +39,30 @@ starts after "Enter Museum" is tapped.
 
 ## The characters
 
-Both characters are built in code (`components/game/characters/ProceduralCharacter.tsx`)
-in a stylised, Pixar-inspired look: her in a white hijab and red/gold Ankara dress, him
-in a royal-blue kaftan and embroidered cap. They have walk/idle/turn animation,
-blinking eyelids, a talking mouth, and turn their heads to each other while chatting.
+The two of us are **VRM avatars** (the 3D anime-style format VRoid uses), built from the
+CC0 VRoid base models (`characters-src/`, from
+[OpenGameArt](https://opengameart.org/content/vroid-studio-cc0-models), free for any use):
+
+- `scripts/build-characters.py` bakes `public/characters/her.vrm` and `him.vrm`. It
+  re-tones the skin, paints long sleeves/trousers onto the limbs, re-colours her
+  scrubs and his senator wear (with embroidery painted by 3D position: the front placket
+  and cuffs), shoes, eyes and hair, shrinks textures for phones and strips unused
+  face morphs. Colours are set at the top of the script; re-run it after changing them
+  (`python3 scripts/build-characters.py`, needs Pillow + numpy).
+- At runtime `characters/vrm/vrmOutfit.ts` adds what a texture can't: her **hijab**
+  (framing her face, draped over her shoulders, skinned so it turns with her head) and
+  his **kaftan hem** and **embroidered cap**. Their colours come from
+  `characters.*.appearance` in `museumConfig.ts`.
+- `characters/vrm/vrmMotion.ts` animates them procedurally: walk cycle matched to
+  speed, idle breathing, turning steps, sitting, talking (mouth, nods, a hand
+  gesture), blinking and turning their heads to each other.
+
+Set `vrm: null` in `museumConfig.ts` to go back to the older sculpted characters
+(`ProceduralCharacter.tsx`), which are also the automatic fallback if a VRM fails to load.
+
+**Lighting:** soft real-time shadows (one warm key light whose shadow box follows her),
+a polished floor with blurred reflections (switched off automatically on slow phones),
+soft contact shading along the walls, and props near the floor cast shadows too.
 
 **Speech bubbles** are run by `ChatDirector.tsx`: a welcome chat after the fly-in, a
 chat at each photo (keyed by memory id), chats while sitting, at the fountain / special

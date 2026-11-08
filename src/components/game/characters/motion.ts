@@ -17,6 +17,8 @@ export interface MotionState {
   talking: boolean
   /** Where the head should turn, relative to the body (rad, + = left) */
   lookYaw: number
+  /** 0..1 — standing at a photo, admiring it (hands clasped, looking up, smiling) */
+  admire: number
 }
 
 export const createMotionState = (maxSpeed: number): MotionState => ({
@@ -26,4 +28,5 @@ export const createMotionState = (maxSpeed: number): MotionState => ({
   sit: 0,
   talking: false,
   lookYaw: 0,
+  admire: 0,
 })

@@ -5,12 +5,13 @@
  * Priorities (a higher one interrupts a lower one):
  *   6 after the birthday celebration · 5 welcome after the fly-in
  *   4 standing at a photo / at the cake · 3 sitting on a bench
- *   2 reaching the fountain, special corner, birthday corner · 1 walking
+ *   2 entering the gallery, fountain, special corner, birthday corner,
+ *     admiring a photo again · 1 walking, admiring the museum
  * Everything goes quiet while a photo, menu or the birthday letter is open.
  */
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { benchChats, genericMemoryChat, memoryChats, moments, walkingChats, type Conversation } from '../../data/chats'
+import { admireChats, benchChats, genericMemoryChat, memoryChats, moments, museumAdmireChats, walkingChats, type Conversation } from '../../data/chats'
 import { museumConfig } from '../../data/museumConfig'
 import { useChatStore } from '../../store/chatStore'
 import { useGameStore } from '../../store/gameStore'
@@ -56,6 +57,11 @@ export function ChatDirector() {
     seatedFor: 0,
     tick: 0,
     visit: -1,
+    admireCooldown: 4,
+    admireOrder: shuffle(admireChats.length),
+    admireNext: 0,
+    museumOrder: shuffle(museumAdmireChats.length),
+    museumNext: 0,
   })
 
   useFrame((_, rawDt) => {
@@ -80,6 +86,7 @@ export function ChatDirector() {
     }
 
     s.cooldown -= dt
+    s.admireCooldown -= dt
     s.seatedFor = runtime.seat.phase === 'seated' ? s.seatedFor + dt : 0
 
     // ── Advance the current conversation ──
@@ -112,7 +119,7 @@ export function ChatDirector() {
     const next = pick(s, g)
     if (next && (!s.playing || next.priority > s.playing.priority)) {
       if (s.playing) stop(s, chat)
-      if (!next.id.startsWith('walk') && !next.id.startsWith('bench')) s.done.add(next.id)
+      if (!/^(walk|bench|admire|museum)-/.test(next.id)) s.done.add(next.id)
       s.playing = { ...next, index: 0, timer: 0.2, speaking: false }
     }
   })
@@ -124,6 +131,11 @@ type DirectorState = {
   playing: Playing | null
   done: Set<string>
   cooldown: number
+  admireCooldown: number
+  admireOrder: number[]
+  admireNext: number
+  museumOrder: number[]
+  museumNext: number
   walkOrder: number[]
   walkNext: number
   benchNext: number
@@ -162,6 +174,16 @@ function pick(s: DirectorState, g: ReturnType<typeof useGameStore.getState>): Ca
     const i = s.benchNext++ % benchChats.length
     return { id: `bench-${i}`, priority: 3, lines: benchChats[i] }
   }
+  // Lingering at a photo they've already talked about: she keeps admiring it
+  if (g.nearby?.kind === 'memory' && s.done.has(`mem-${g.nearby.id}`) && p.idleTime > 2.2 && !s.playing && s.admireCooldown <= 0) {
+    s.admireCooldown = 9 + Math.random() * 6
+    const i = s.admireOrder[s.admireNext++ % s.admireOrder.length]
+    return { id: `admire-${i}`, priority: 2, lines: admireChats[i] }
+  }
+  if (p.position.z < LANDMARKS.archZ && p.position.z > SECTIONS.special.from) {
+    const c = once('gallery', 2, moments.gallery)
+    if (c) return c
+  }
   if (Math.hypot(p.position.x - LANDMARKS.fountain.x, p.position.z - LANDMARKS.fountain.z) < 4.6) {
     const c = once('fountain', 2, moments.fountain)
     if (c) return c
@@ -172,6 +194,12 @@ function pick(s: DirectorState, g: ReturnType<typeof useGameStore.getState>): Ca
   } else if (p.position.z < SECTIONS.special.from) {
     const c = once('special', 2, moments.special)
     if (c) return c
+  }
+  // Standing still in the open: she takes in the museum itself
+  if (!g.nearby && p.idleTime > 4 && s.cooldown <= 0 && s.admireCooldown <= 0 && !s.playing && runtime.seat.phase === 'none') {
+    s.admireCooldown = 14 + Math.random() * 8
+    const i = s.museumOrder[s.museumNext++ % s.museumOrder.length]
+    return { id: `museum-${i}`, priority: 1, lines: museumAdmireChats[i] }
   }
   if (p.speed > 0.5 && s.cooldown <= 0 && !s.playing && runtime.seat.phase === 'none') {
     const i = s.walkOrder[s.walkNext++ % s.walkOrder.length]
