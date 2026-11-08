@@ -6,6 +6,7 @@
 import { useMemo } from 'react'
 import { Instance, Instances, MeshReflectorMaterial } from '@react-three/drei'
 import { useGameStore } from '../../store/gameStore'
+import { useIsTouch } from '../../hooks/useIsTouch'
 import * as THREE from 'three'
 import { materials } from '../../lib/materials'
 import { marbleTexture, radialTexture, roundRugTexture, runnerTexture, skyTexture } from '../../lib/textures'
@@ -35,7 +36,12 @@ export function MuseumEnvironment() {
 }
 
 function Floor() {
-  const lowPower = useGameStore((s) => s.lowPower)
+  // Phones get the plain polished floor: the planar reflection renders the
+  // scene again into half-float / 16-bit-depth targets, which many mobile GPUs
+  // turn into black lines and blotches.
+  const slow = useGameStore((s) => s.lowPower)
+  const touch = useIsTouch()
+  const lowPower = slow || touch
   const map = useMemo(() => {
     const t = marbleTexture().clone()
     t.wrapS = t.wrapT = THREE.RepeatWrapping
@@ -47,7 +53,7 @@ function Floor() {
     <mesh rotation-x={-Math.PI / 2} receiveShadow>
       <planeGeometry args={[W * 2, L * 2]} />
       {lowPower ? (
-        <meshStandardMaterial map={map} color="#d2c5b6" roughness={0.28} metalness={0.02} envMapIntensity={0.9} />
+        <meshStandardMaterial map={map} color="#d2c5b6" roughness={0.22} metalness={0.02} envMapIntensity={1.1} />
       ) : (
         // Polished stone: soft, blurred reflections of the room, the frames and the two of us
         <MeshReflectorMaterial
@@ -89,17 +95,17 @@ function ContactShade() {
   }, [])
   const D = 0.9
   const strips: { pos: [number, number, number]; rot: number; len: number }[] = [
-    { pos: [-W + D / 2, 0.004, 0], rot: -Math.PI / 2, len: L * 2 },
-    { pos: [W - D / 2, 0.004, 0], rot: Math.PI / 2, len: L * 2 },
-    { pos: [0, 0.004, -L + D / 2], rot: 0, len: W * 2 },
-    { pos: [0, 0.004, L - D / 2], rot: Math.PI, len: W * 2 },
+    { pos: [-W + D / 2, 0.012, 0], rot: -Math.PI / 2, len: L * 2 },
+    { pos: [W - D / 2, 0.012, 0], rot: Math.PI / 2, len: L * 2 },
+    { pos: [0, 0.012, -L + D / 2], rot: 0, len: W * 2 },
+    { pos: [0, 0.012, L - D / 2], rot: Math.PI, len: W * 2 },
   ]
   return (
     <>
       {strips.map((s, i) => (
         <mesh key={i} position={s.pos} rotation={[-Math.PI / 2, 0, s.rot]} renderOrder={1}>
           <planeGeometry args={[s.len, D]} />
-          <meshBasicMaterial map={tex} transparent depthWrite={false} polygonOffset polygonOffsetFactor={-2} />
+          <meshBasicMaterial map={tex} transparent depthWrite={false} polygonOffset polygonOffsetFactor={-2} polygonOffsetUnits={-8} />
         </mesh>
       ))}
     </>
@@ -148,7 +154,7 @@ function AccentPaint() {
     const len = from - to
     const z = (from + to) / 2
     return [-1, 1].map((side) => (
-      <mesh key={`${z}${side}`} position={[side * (W - 0.004), (H + 1.11) / 2 - 0.15, z]} rotation-y={(-side * Math.PI) / 2} material={material}>
+      <mesh key={`${z}${side}`} position={[side * (W - 0.012), (H + 1.11) / 2 - 0.15, z]} rotation-y={(-side * Math.PI) / 2} material={material}>
         <planeGeometry args={[len, H - 1.41]} />
       </mesh>
     ))
@@ -273,18 +279,18 @@ function Rugs() {
   return (
     <group>
       {runners.map((r) => (
-        <mesh key={r.z} rotation-x={-Math.PI / 2} position={[0, 0.006, r.z]} receiveShadow>
+        <mesh key={r.z} rotation-x={-Math.PI / 2} position={[0, 0.014, r.z]} receiveShadow>
           <planeGeometry args={[2.6, r.len]} />
-          <meshStandardMaterial map={r.map} roughness={1} polygonOffset polygonOffsetFactor={-1} />
+          <meshStandardMaterial map={r.map} roughness={1} polygonOffset polygonOffsetFactor={-1} polygonOffsetUnits={-6} />
         </mesh>
       ))}
-      <mesh rotation-x={-Math.PI / 2} position={[LANDMARKS.heartSculpture.x, 0.007, LANDMARKS.heartSculpture.z]} receiveShadow>
+      <mesh rotation-x={-Math.PI / 2} position={[LANDMARKS.heartSculpture.x, 0.016, LANDMARKS.heartSculpture.z]} receiveShadow>
         <circleGeometry args={[3.1, 48]} />
-        <meshStandardMaterial map={special} roughness={1} transparent polygonOffset polygonOffsetFactor={-1} />
+        <meshStandardMaterial map={special} roughness={1} transparent polygonOffset polygonOffsetFactor={-1} polygonOffsetUnits={-6} />
       </mesh>
-      <mesh rotation-x={-Math.PI / 2} position={[LANDMARKS.cake.x, 0.007, LANDMARKS.cake.z]} receiveShadow>
+      <mesh rotation-x={-Math.PI / 2} position={[LANDMARKS.cake.x, 0.016, LANDMARKS.cake.z]} receiveShadow>
         <circleGeometry args={[3.5, 48]} />
-        <meshStandardMaterial map={birthday} roughness={1} transparent polygonOffset polygonOffsetFactor={-1} />
+        <meshStandardMaterial map={birthday} roughness={1} transparent polygonOffset polygonOffsetFactor={-1} polygonOffsetUnits={-6} />
       </mesh>
     </group>
   )

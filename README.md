@@ -60,9 +60,12 @@ CC0 VRoid base models (`characters-src/`, from
 Set `vrm: null` in `museumConfig.ts` to go back to the older sculpted characters
 (`ProceduralCharacter.tsx`), which are also the automatic fallback if a VRM fails to load.
 
-**Lighting:** soft real-time shadows (one warm key light whose shadow box follows her),
-a polished floor with blurred reflections (switched off automatically on slow phones),
-soft contact shading along the walls, and props near the floor cast shadows too.
+**Lighting:** soft real-time shadows from the two characters (one warm key light whose
+shadow box follows her; only the characters cast, so no shadow is ever cut off at the
+box edge), baked soft shadows under the benches, and soft contact shading along the
+walls. On computers the floor shows blurred reflections; phones (and slow devices) get a
+plain polished floor instead, because the reflection pass draws black lines on many
+mobile GPUs. The character textures are padded around their UV seams for the same reason.
 
 **Speech bubbles** are run by `ChatDirector.tsx`: a welcome chat after the fly-in, a
 chat at each photo (keyed by memory id), chats while sitting, at the fountain / special

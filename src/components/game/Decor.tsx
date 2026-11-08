@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import { Instance, Instances, RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import { materials } from '../../lib/materials'
+import { radialTexture } from '../../lib/textures'
 import { BENCH_DROP, PLACEMENTS } from './MuseumLayout'
 
 export function Decor() {
@@ -114,6 +115,11 @@ function Benches() {
     <>
       {PLACEMENTS.benches.map((b, i) => (
         <group key={i} position={[b.x, -BENCH_DROP, b.z]}>
+          {/* Soft contact shadow under the bench (baked, so it never flickers) */}
+          <mesh rotation-x={-Math.PI / 2} position-y={BENCH_DROP + 0.02} scale={[1, 2.6, 1]} renderOrder={1}>
+            <planeGeometry args={[1.05, 1.05]} />
+            <meshBasicMaterial map={radialTexture()} color="#5e4048" transparent opacity={0.3} depthWrite={false} />
+          </mesh>
           <RoundedBox args={[0.64, 0.17, 1.9]} radius={0.07} smoothness={3} position-y={0.47} material={b.z < -5 ? materials.velvetLavender : materials.velvet} />
           <mesh position-y={0.37} material={materials.gold}>
             <boxGeometry args={[0.6, 0.04, 1.8]} />

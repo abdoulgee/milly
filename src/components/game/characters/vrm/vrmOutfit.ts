@@ -555,6 +555,12 @@ export function dressVRM(vrm: VRM, ap: ProceduralAppearance) {
       // No anime ink outlines: they're drawn as an inside-out copy of the body,
       // which pokes through as black lines/patches at bent knees and elbows
       if (mt.isOutline) mt.visible = false
+      // The subtle VRoid normal maps add little but their screen-space tangent
+      // frames produce black specks on some phone GPUs
+      if (mt.normalMap) {
+        mt.normalMap = null
+        mt.needsUpdate = true
+      }
     }
     // No self-shadowing on the characters (avoids flickering dark stripes,
     // "shadow acne", especially on phone GPUs). They still cast shadows.

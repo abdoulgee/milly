@@ -27,35 +27,6 @@ import { characters, type CharacterConfig } from '../../data/museumConfig'
 const prepare = (c: CharacterConfig) => (c.vrm ? loadVRM(c.vrm).catch(() => loadCharacter(c.appearance)) : loadCharacter(c.appearance))
 const charactersReady = Promise.all([prepare(characters.player), prepare(characters.companion)])
 
-/**
- * Furniture & props near the floor cast soft shadows too (benches, plants,
- * pedestals…) so nothing looks like it floats. Big architecture, wall art
- * and see-through things are skipped. The key light's shadow box only
- * covers the area around the two of us, so this stays cheap.
- */
-function enablePropShadows(scene: THREE.Object3D) {
-  const box = new THREE.Box3()
-  const size = new THREE.Vector3()
-  scene.updateMatrixWorld(true)
-  scene.traverse((o) => {
-    const mesh = o as THREE.Mesh
-    if (!mesh.isMesh || (mesh as THREE.SkinnedMesh).isSkinnedMesh) return
-    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
-    if (mats.some((m) => m.transparent || (m as THREE.MeshBasicMaterial).isMeshBasicMaterial)) return
-    if ((mesh as THREE.InstancedMesh).isInstancedMesh) {
-      mesh.geometry.computeBoundingBox()
-      box.copy(mesh.geometry.boundingBox!)
-      if (box.getSize(size).y > 3 || box.max.y > 3) return
-      mesh.castShadow = true
-      return
-    }
-    box.setFromObject(mesh)
-    box.getSize(size)
-    if (size.x > 3 || size.z > 3 || size.y > 3.2 || box.min.y > 2.4 || size.y < 0.04) return
-    mesh.castShadow = true
-  })
-}
-
 /** Pre-compiles shaders once everything has loaded, then flags the scene ready. */
 function Ready() {
   const { gl, scene, camera } = useThree()
@@ -69,7 +40,6 @@ function Ready() {
       .then(() => new Promise((r) => setTimeout(r, 50)))
       .then(() => {
         if (!live) return
-        enablePropShadows(scene)
         gl.compile(scene, camera)
         setSceneReady()
       })

@@ -233,6 +233,51 @@ def limb_masks(j, binc, prim_ids, size):
     return labels
 
 
+# ─── Seam padding ──────────────────────────────────────────────────────────
+def coverage(j, binc, prim_ids, size):
+    """Mask of the texels the given primitives actually use (their UV islands)."""
+    mesh = next(m for m in j['meshes'] if m['name'].startswith('Body'))
+    W, H = size
+    im = Image.new('L', (W, H), 0)
+    d = ImageDraw.Draw(im)
+    for pi in prim_ids:
+        pr = mesh['primitives'][pi]
+        uv = accessor(j, binc, pr['attributes']['TEXCOORD_0'])
+        idx = accessor(j, binc, pr['indices']).reshape(-1, 3)
+        for tri in idx:
+            d.polygon([(float(uv[v, 0] * W), float(uv[v, 1] * H)) for v in tri], fill=255)
+    return np.asarray(im, dtype=np.float32) / 255 > 0.5
+
+
+def pad_islands(a, cov, steps=24):
+    """
+    Bleed each UV island's colours outwards into the unused texels around it.
+    Phones sample small, blurry mip levels of these textures; without padding
+    the dark background between islands leaks in as black seams/lines.
+    """
+    out = a.copy()
+    known = cov.copy()
+    for _ in range(steps):
+        if known.all():
+            break
+        m = known.astype(np.float32)
+        mi = Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.BoxBlur(2))
+        den = np.asarray(mi, np.float32) / 255
+        grow = (~known) & (den > 0.01)
+        if not grow.any():
+            break
+        for c in range(3):
+            ch = Image.fromarray(np.clip(out[..., c] * m * 255, 0, 255).astype(np.uint8)).filter(ImageFilter.BoxBlur(2))
+            num = np.asarray(ch, np.float32) / 255
+            out[..., c][grow] = num[grow] / den[grow]
+        known |= grow
+    # anything still unreached gets the island average
+    if (~known).any():
+        out[..., :3][~known] = out[..., :3][known].mean(axis=0)
+    out[..., 3] = np.where(cov, a[..., 3], 1.0) if a[..., 3].min() >= 0.99 else a[..., 3]
+    return out
+
+
 # ─── Painting by 3D position ───────────────────────────────────────────────
 def node_world_positions(j):
     """Rest-pose world positions of every node (VRoid nodes only translate)."""
@@ -468,6 +513,8 @@ def build(cfg):
 
     done = set()
 
+    body_mesh = next(m for m in j['meshes'] if m['name'].startswith('Body'))
+
     def edit(mat_suffix, fn):
         for m in mats:
             if m['name'].endswith(mat_suffix):
@@ -475,7 +522,12 @@ def build(cfg):
                 if ii in done:
                     return
                 done.add(ii)
-                store(ii, shrink(fn(load(ii))))
+                out = fn(load(ii))
+                # clothes live on the body mesh: pad their UV islands (see pad_islands)
+                prims = [i for i, p in enumerate(body_mesh['primitives']) if mats[p['material']]['name'] == m['name']]
+                if prims and mat_suffix.endswith('_CLOTH'):
+                    out = from_np(pad_islands(to_np(out), coverage(j, binc, prims, out.size)))
+                store(ii, shrink(out))
                 return
 
     # Reference skin colour = median of the face texture's opaque skin
@@ -525,6 +577,7 @@ def build(cfg):
         wl, wr = nodes['J_Bip_L_Hand'], nodes['J_Bip_R_Hand']
         a = paint3d(j, binc, skin_prims, a, embroidery_cuffs(wl, wr, cfg['embroidery']),
                     (np.minimum(wl, wr) - 0.2, np.maximum(wl, wr) + 0.2))
+    a = pad_islands(a, coverage(j, binc, skin_prims, im.size))
     store(body_img, shrink(from_np(a)))
     done.add(body_img)
 
