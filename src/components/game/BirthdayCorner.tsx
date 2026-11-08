@@ -71,17 +71,18 @@ function WallMessage() {
         {b.wallHeadline}
         <meshBasicMaterial toneMapped={false} />
       </Text>
-      <Text font={fonts.script} fontSize={0.66} position={[0, 3.45, 0]} color="#b9758d" anchorX="center" anchorY="middle">
+      {/* Her name, big and golden under the headline */}
+      <Text font={fonts.script} fontSize={1.0} position={[0, 3.4, 0]} color="#c9965a" anchorX="center" anchorY="middle" outlineWidth={0.012} outlineColor="#fff4f0">
         {b.recipientName}
         <meshBasicMaterial toneMapped={false} />
       </Text>
-      <Text font={fonts.serifItalic} fontSize={0.24} position={[0, 2.82, 0]} color="#9b6a80" anchorX="center" anchorY="middle" letterSpacing={0.03}>
+      <Text font={fonts.serifItalic} fontSize={0.24} position={[0, 2.66, 0]} color="#9b6a80" anchorX="center" anchorY="middle" letterSpacing={0.03}>
         {b.wallSubtitle}
       </Text>
       {/* Gold flourish lines */}
       {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 2.6, 2.82, 0]} material={materials.gold}>
-          <boxGeometry args={[1.4, 0.02, 0.01]} />
+        <mesh key={s} position={[s * 3.75, 2.66, 0]} material={materials.gold}>
+          <boxGeometry args={[0.6, 0.02, 0.01]} />
         </mesh>
       ))}
     </group>

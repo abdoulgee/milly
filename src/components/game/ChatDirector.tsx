@@ -19,7 +19,8 @@ import { runtime } from '../../store/runtime'
 import { LANDMARKS, SECTIONS } from './MuseumLayout'
 
 const GAP = 0.45 // pause between lines
-const fill = (t: string) => t.replace(/\{name\}/g, museumConfig.birthday.recipientName)
+const fill = (t: string) =>
+  t.replace(/\{name\}/g, museumConfig.birthday.nickname).replace(/\{fullName\}/g, museumConfig.birthday.recipientName)
 const duration = (t: string) => Math.min(5.5, Math.max(2.3, 1.5 + t.length * 0.06))
 
 interface Playing {

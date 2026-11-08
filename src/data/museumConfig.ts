@@ -130,30 +130,32 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
 
 export const museumConfig = {
   title: 'Our Little World',
-  subtitle: 'A tiny museum of us',
+  subtitle: 'A tiny museum of us, for Zainab',
   welcomeMessage:
-    'Every frame on these walls holds a piece of our story. Take your time, wander slowly, and remember with me.',
+    'Milly, every frame on these walls holds a piece of our story. Take your time, wander slowly, and remember with me.',
   enterLabel: 'Enter Museum',
 
   /** The freestanding sign beside the entrance arch */
   entranceSign: {
-    title: 'Welcome, my love',
+    title: 'Welcome, Milly',
     body: 'This little museum was built just for you.\nWalk up to any photo to relive the memory.',
   },
 
   specialCornerTitle: 'Our Most Treasured Moments',
 
   birthday: {
-    /** Her name / nickname — shown on the wall and in the final message */
-    recipientName: 'My Love',
+    /** Her name — shown big on the birthday wall and in the final letter */
+    recipientName: 'Zainab',
+    /** What I call her — used in the chats (`{name}`), signs and the letter's greeting */
+    nickname: 'Milly',
     wallHeadline: 'Happy Birthday',
-    wallSubtitle: 'to my favourite person in the whole world',
+    wallSubtitle: 'to my Milly, my favourite person in the whole world',
     cakeActionLabel: 'Make a wish',
     cakeReplayLabel: 'Celebrate again',
     messageTitle: 'Happy Birthday',
     /** Each string is one paragraph of the final letter */
     messageParagraphs: [
-      'Today is all about you — your kindness, your laugh, and the way you make every day brighter just by being in it.',
+      'My dear Milly, today is all about you — your kindness, your laugh, and the way you make every day brighter just by being in it.',
       'Thank you for every memory on these walls, and for all the ones we have not made yet. I cannot wait to fill a hundred more museums with you.',
       'I hope this year gives you everything you have ever wished for.',
     ],
