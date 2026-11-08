@@ -70,7 +70,7 @@ export function BirthdayMessage() {
                   {b.messageTitle}
                 </h2>,
                 <p key="n" className="mt-1 font-script text-4xl text-rosegold">
-                  {b.recipientName}
+                  my {b.nickname}
                 </p>,
                 <div key="d" className="my-5 flex items-center justify-center gap-3 text-rosegold/70">
                   <span className="h-px w-14 bg-current" />

@@ -3,8 +3,8 @@
  *
  * Speech bubbles pop up above the two characters. Each conversation is a
  * list of lines: ['her' | 'him', 'text']. Edit freely — add, remove or
- * rewrite lines. `{name}` becomes her nickname (Milly) and `{fullName}` her
- * name (Zainab) — both set in museumConfig.birthday.
+ * rewrite lines. `{name}` becomes her nickname (Milly) — he always calls her
+ * "my {name}". `{fullName}` (Zainab) is only for her reading her own name.
  *
  *   memories  – said while she stands at that photo (keyed by memory id)
  *   admire    – she keeps admiring a photo they've already talked about
@@ -21,9 +21,10 @@ export type Conversation = ChatLine[]
 export const memoryChats: Record<string, Conversation> = {
   'memory-001': [
     ['her', 'Wait… is that me? 😍 This picture is so beautiful!'],
-    ['him', 'That smile, {name}… it’s the reason I can never focus on anything else.'],
+    ['him', 'That smile, my {name}… it’s the reason I can never focus on anything else.'],
     ['her', 'Stop it 🙈 …but I really do love this one.'],
     ['him', 'Me too. Forever.'],
+    ['her', 'Forever and ever 💗'],
   ],
   'memory-002': [
     ['her', 'Ahh, my mirror selfie! Look how pretty that red is 😍'],
@@ -35,6 +36,7 @@ export const memoryChats: Record<string, Conversation> = {
     ['him', 'Look at you, so graceful.'],
     ['her', "Wait… that's the outfit I'm wearing right now!"],
     ['him', 'I know 😌 I copied it perfectly.'],
+    ['her', "Hahaha you're so extra 😂 I love it."],
   ],
   'memory-010': [
     ['her', 'Friday, 5:40 PM… you kept the timestamp? 🥹'],
@@ -48,7 +50,7 @@ export const memoryChats: Record<string, Conversation> = {
   ],
   'memory-008': [
     ['her', 'My white coat! 👩‍⚕️ Look at me, all serious.'],
-    ['him', 'My future nurse. I am so proud of you, {name}.'],
+    ['him', 'My future nurse. I am so proud of you, my {name}.'],
     ['her', "Hehe, you'd be my first patient."],
     ['him', "I'm already sick… lovesick."],
     ['her', 'That was so corny 😂'],
@@ -58,10 +60,11 @@ export const memoryChats: Record<string, Conversation> = {
     ['him', 'Sun-kissed and glowing.'],
     ['her', 'I was just enjoying the sun!'],
     ['him', 'And I was enjoying the view.'],
+    ['her', 'Stoppp 🙈 you always do this.'],
   ],
   'memory-013': [
     ['her', 'Ooh, this one is my favourite picture of me 💗'],
-    ['him', 'This one takes my breath away, {name}.'],
+    ['him', 'This one takes my breath away, my {name}.'],
     ['her', "Aww, you're making me blush 🙈"],
   ],
   'memory-009': [
@@ -74,12 +77,14 @@ export const memoryChats: Record<string, Conversation> = {
     ['him', 'Wait till you see what is waiting at the end of the hall…'],
     ['her', 'What?! Tell me!'],
     ['him', 'Keep walking 😉'],
+    ['her', "Ooh, now I'm so curious 👀"],
   ],
   'memory-005': [
     ['her', 'Look at us 🥹 This is the most beautiful one here.'],
     ['him', 'This one is my favourite too.'],
     ['her', 'We look so good together.'],
-    ['him', 'Side by side. Always, {name}.'],
+    ['him', 'Side by side. Always, my {name}.'],
+    ['her', 'Always 🥹💕'],
   ],
   'memory-006': [
     ['her', 'Do you remember this walk? The sky was so perfect ☁️'],
@@ -100,15 +105,18 @@ export const admireChats: Conversation[] = [
   [
     ['her', 'It looks even better up close.'],
     ['him', 'Just like you.'],
+    ['her', "Aww, you're so sweet 💗"],
   ],
   [
     ['her', 'Can we print this one for real?'],
     ['him', 'Already planning it 😉'],
+    ['her', 'Yay! Our own little wall at home 🥰'],
   ],
   [['her', 'Every time I look at it, I smile.']],
   [
     ['her', 'This is so beautiful… thank you 💗'],
     ['him', 'Anything for you.'],
+    ['her', "I'm so lucky to have you 🥹"],
   ],
 ]
 
@@ -118,19 +126,23 @@ export const museumAdmireChats: Conversation[] = [
   [
     ['her', 'Look at the floor, it’s so shiny! I can see our reflection.'],
     ['him', 'Even the floor wants a picture of you.'],
+    ['her', "Hahaha you're too much 😂"],
   ],
   [
     ['her', 'The chandeliers are gorgeous 😍'],
     ['him', 'They light up the room… almost as much as you.'],
+    ['her', "Aww, you're such a charmer 🥰"],
   ],
   [['her', 'It really feels like a real museum.']],
   [
     ['her', 'Every wall has a little piece of us on it.'],
     ['him', 'And there’s room for so many more.'],
+    ['her', "Then let's fill every single wall 💕"],
   ],
   [
     ['her', 'The little trees and flowers… you thought of everything 🌸'],
     ['him', 'Only the best for you.'],
+    ['her', 'You really spoil me 🥹'],
   ],
 ]
 
@@ -138,6 +150,7 @@ export const museumAdmireChats: Conversation[] = [
 export const genericMemoryChat: Conversation = [
   ['her', 'I remember this one!'],
   ['him', 'Me too. One of my favourite days.'],
+    ['her', 'Mine too 💗'],
 ]
 
 export const benchChats: Conversation[] = [
@@ -147,20 +160,22 @@ export const benchChats: Conversation[] = [
     ['her', 'Mhm 🥰'],
   ],
   [
-    ['him', 'I could sit here with you forever, {name}.'],
+    ['him', 'I could sit here with you forever, my {name}.'],
     ['her', 'Me too.'],
   ],
   [
     ['her', 'Which photo is your favourite?'],
     ['him', 'All of them. They all have you in them.'],
+    ['her', 'Smooth 😏 …but I love that answer.'],
   ],
   [
-    ['him', 'Thank you for every memory, {name}.'],
+    ['him', 'Thank you for every memory, my {name}.'],
     ['her', 'Thank you for making them with me ❤️'],
   ],
   [
     ['her', 'Can we make a hundred more memories?'],
     ['him', 'A thousand. I promise.'],
+    ['her', "I'm holding you to that 🤝💗"],
   ],
 ]
 
@@ -168,22 +183,27 @@ export const walkingChats: Conversation[] = [
   [
     ['her', 'This place is so pretty!'],
     ['him', 'Not as pretty as you.'],
+    ['her', 'Hehe, stop it 🙈'],
   ],
   [
     ['her', 'Wow, look at all the frames 😍 Which one should I see next?'],
     ['him', 'Whichever one makes you smile first.'],
+    ['her', 'Then… all of them 😄'],
   ],
   [
     ['her', 'The lights over the pictures are so pretty ✨'],
     ['him', 'Every memory deserves a spotlight.'],
+    ['her', 'And you made every single one shine ✨'],
   ],
   [
     ['her', 'I feel like I’m walking through our whole story.'],
     ['him', 'And this is only chapter one.'],
+    ['her', "I can't wait for the next chapters 🥹"],
   ],
   [
     ['her', 'Is that a fountain over there? 💧'],
     ['him', 'Go and see!'],
+    ['her', 'Coming! 🏃\u200d♀️💨'],
   ],
   [
     ['him', "Slow down, I can't keep up 😅"],
@@ -192,15 +212,18 @@ export const walkingChats: Conversation[] = [
   [
     ['her', 'Did you really make all of this?'],
     ['him', 'Every frame, every flower. All for you.'],
+    ['her', "I don't even know what to say… thank you 🥹💗"],
   ],
   [
     ['her', 'Where are we going?'],
     ['him', "You're leading! I'd follow you anywhere."],
+    ['her', 'Hehe, then follow me 😝'],
   ],
   [
     ['him', 'Have I told you today that I love you?'],
     ['her', 'Hmm… not yet.'],
-    ['him', 'I love you, {name} ❤️'],
+    ['him', 'I love you, my {name} ❤️'],
+    ['her', 'I love you more ❤️'],
   ],
   [
     ['him', "Don't skip any photos!"],
@@ -209,6 +232,7 @@ export const walkingChats: Conversation[] = [
   [
     ['her', 'Race you to the end!'],
     ['him', 'No running in the museum! 😂'],
+    ['her', "Fine, fine… I'll walk fast then 😝"],
   ],
   [
     ['him', "You know you're my favourite person, right?"],
@@ -217,15 +241,17 @@ export const walkingChats: Conversation[] = [
   [
     ['her', 'Let’s sit on a bench for a bit?'],
     ['him', 'Lead the way 🪑'],
+    ['her', 'Come on then, slowpoke 😄'],
   ],
 ]
 
 export const moments = {
   /** Right after the entrance fly-in */
   welcome: [
-    ['him', 'Welcome to our little world, {name} ✨'],
+    ['him', 'Welcome to our little world, my {name} ✨'],
     ['her', 'Wow… you made this for me?'],
-    ['him', 'Every bit of it, {fullName}. Come, let me show you around.'],
+    ['him', 'Every bit of it, my {name}. Come, let me show you around.'],
+    ['her', 'Okay, show me everything! 🥹✨'],
   ] as Conversation,
   gallery: [
     ['her', 'Wow… look at all these pictures! 😍'],
@@ -244,16 +270,17 @@ export const moments = {
   ] as Conversation,
   birthday: [
     ['her', 'Balloons? Presents? What is going on?!'],
-    ['him', 'Look at the wall, {name} 🎂'],
+    ['him', 'Look at the wall, my {name} 🎂'],
     ['her', 'It says my name! Zainab 😭💗'],
   ] as Conversation,
   cake: [
-    ['him', 'Close your eyes, {name}, make a wish, and blow the candles!'],
+    ['him', 'Close your eyes, my {name}, make a wish, and blow the candles!'],
+    ['her', 'Okay… eyes closed… wishing 🤫✨'],
   ] as Conversation,
   afterCelebration: [
-    ['him', 'Happy birthday, {fullName} ❤️'],
-    ['him', 'My Milly. My favourite person.'],
+    ['him', 'Happy birthday, my {name} ❤️'],
     ['her', 'This is the best birthday ever 🥹'],
     ['him', 'You deserve the whole world.'],
+    ['her', 'You ARE my whole world 💗'],
   ] as Conversation,
 }

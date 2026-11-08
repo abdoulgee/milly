@@ -25,7 +25,9 @@ function keepOnScreen(el: THREE.Object3D, camera: THREE.Camera, size: { width: n
   const x = (v.x * 0.5 + 0.5) * size.width
   const y = (-v.y * 0.5 + 0.5) * size.height
   const half = Math.min(113, size.width / 2 - 8)
-  return [clamp(x, half + 8, size.width - half - 8), clamp(y, 130, size.height - 20)]
+  // keep clear of the top HUD (taller relative to the screen on phones)
+  const top = size.width < 600 ? 185 : 130
+  return [clamp(x, half + 8, size.width - half - 8), clamp(y, top, size.height - 20)]
 }
 
 interface Props {

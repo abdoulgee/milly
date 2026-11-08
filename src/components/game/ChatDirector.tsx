@@ -102,7 +102,7 @@ export function ChatDirector() {
           pl.index++
           if (pl.index >= pl.lines.length) {
             s.playing = null
-            s.cooldown = pl.priority >= 3 ? 7 : 9 + Math.random() * 8
+            s.cooldown = pl.priority >= 3 ? 6 : 6 + Math.random() * 6
           }
         } else {
           const [who, text] = pl.lines[pl.index]

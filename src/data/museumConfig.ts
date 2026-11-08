@@ -132,19 +132,19 @@ export const museumConfig = {
   title: 'Our Little World',
   subtitle: 'A tiny museum of us, for Zainab',
   welcomeMessage:
-    'Milly, every frame on these walls holds a piece of our story. Take your time, wander slowly, and remember with me.',
+    'My Milly, every frame on these walls holds a piece of our story. Take your time, wander slowly, and remember with me.',
   enterLabel: 'Enter Museum',
 
   /** The freestanding sign beside the entrance arch */
   entranceSign: {
-    title: 'Welcome, Milly',
+    title: 'Welcome, my Milly',
     body: 'This little museum was built just for you.\nWalk up to any photo to relive the memory.',
   },
 
   specialCornerTitle: 'Our Most Treasured Moments',
 
   birthday: {
-    /** Her name — shown big on the birthday wall and in the final letter */
+    /** Her name — shown big on the birthday wall (he never calls her this; he says "my Milly") */
     recipientName: 'Zainab',
     /** What I call her — used in the chats (`{name}`), signs and the letter's greeting */
     nickname: 'Milly',

@@ -35,7 +35,7 @@ function useGuidance(isTouch: boolean): string {
   const hasMoved = useGameStore((s) => s.hasMoved)
   const viewed = useGameStore((s) => s.viewed.length)
   const celebration = useGameStore((s) => s.celebration)
-  if (celebration === 'done') return `Happy birthday, ${museumConfig.birthday.recipientName} ♡`
+  if (celebration === 'done') return `Happy birthday, my ${museumConfig.birthday.nickname} ♡`
   if (!hasMoved) return isTouch ? 'Use the joystick to walk · swipe to look around' : 'WASD to walk · drag to look · E to interact'
   if (viewed === 0) return 'Walk up to a photo to relive the memory'
   if (viewed >= Math.min(6, memories.length)) return 'Something sweet is waiting at the end of the hall…'
