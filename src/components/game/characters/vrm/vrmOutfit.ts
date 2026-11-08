@@ -205,7 +205,7 @@ function skin(vrm: VRM, g: THREE.BufferGeometry, material: THREE.Material, weigh
   mesh.updateMatrixWorld(true)
   mesh.bind(body.skeleton, body.bindMatrix)
   mesh.castShadow = true
-  mesh.receiveShadow = true
+  mesh.receiveShadow = false
   mesh.frustumCulled = false
   return mesh
 }
@@ -552,8 +552,13 @@ export function dressVRM(vrm: VRM, ap: ProceduralAppearance) {
     for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
       const mt = m as MToonMaterial
       if (!mt.isMToonMaterial) continue
-      if (mt.isOutline) mt.outlineWidthFactor *= 0.45
+      // No anime ink outlines: they're drawn as an inside-out copy of the body,
+      // which pokes through as black lines/patches at bent knees and elbows
+      if (mt.isOutline) mt.visible = false
     }
+    // No self-shadowing on the characters (avoids flickering dark stripes,
+    // "shadow acne", especially on phone GPUs). They still cast shadows.
+    mesh.receiveShadow = false
   })
   if (ap.body === 'female') {
     addHijab(vrm, ap.headwear)

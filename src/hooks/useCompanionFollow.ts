@@ -26,6 +26,7 @@ const START_RADIUS = 0.55 // begin walking when the target is this far
 const STOP_RADIUS = 0.16 // stop once this close
 const PERSONAL_SPACE = 0.85
 const MIN_GAP = 0.62
+const STROLL = 1.15 // relaxed walking pace (m/s) for small repositioning steps
 
 const target = new THREE.Vector3()
 const next = new THREE.Vector3()
@@ -138,8 +139,11 @@ export function useCompanionFollow(
       st.vel.set(0, 0, 0)
     }
 
+    // Walk at her pace: match her speed while following, stroll when stepping
+    // up beside her, and only speed up a little if he has fallen behind.
     const catchUp = clamp((playerDist - 2.4) / 3, 0, 1)
-    const cruise = config.maxSpeed * (0.82 + 0.18 * catchUp)
+    const pace = besideHer ? STROLL : Math.max(STROLL, p.speed)
+    const cruise = Math.min(config.maxSpeed, pace * (1 + 0.3 * catchUp))
     const desired = st.moving ? clamp(dist * 2.4, 0, 1) * cruise : 0
     let dvx = dist > 1e-4 ? (tx / dist) * desired : 0
     let dvz = dist > 1e-4 ? (tz / dist) * desired : 0

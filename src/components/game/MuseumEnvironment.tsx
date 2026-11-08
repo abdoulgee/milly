@@ -58,9 +58,8 @@ function Floor() {
           mixBlur={1.2}
           mixStrength={1.8}
           mixContrast={1}
-          depthScale={0.6}
-          minDepthThreshold={0.25}
-          maxDepthThreshold={1.4}
+          // no depth-based fading: its depth texture causes black blotches on some phones
+          depthScale={0}
           roughness={0.42}
           metalness={0.04}
           mirror={0}

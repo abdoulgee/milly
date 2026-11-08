@@ -106,7 +106,7 @@ export const characters: { player: CharacterConfig; companion: CharacterConfig }
     rotationOffset: 0,
     yOffset: 0,
     position: [1.1, 0, 18.6],
-    maxSpeed: 3.6,
+    maxSpeed: 3.2,
     animations: { walkSpeed: 1.4, runSpeed: 3.5 },
     // Senator wear: charcoal knee-length top & trousers with silver embroidery,
     // matching embroidered cap, dark brown shoes. (The top/trouser texture

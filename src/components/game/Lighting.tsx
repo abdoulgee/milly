@@ -65,8 +65,8 @@ export function Lighting() {
         shadow-camera-bottom={-4.5}
         shadow-camera-near={1}
         shadow-camera-far={22}
-        shadow-bias={-0.0005}
-        shadow-normalBias={0.025}
+        shadow-bias={-0.0008}
+        shadow-normalBias={0.04}
         shadow-radius={4}
       />
       <directionalLight position={[-8, 7, -10]} intensity={0.45} color="#e6e4ff" />

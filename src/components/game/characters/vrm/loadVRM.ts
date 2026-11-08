@@ -39,7 +39,7 @@ export function loadVRM(url: string): Promise<VRM> {
           o.frustumCulled = false
           if ((o as THREE.Mesh).isMesh) {
             o.castShadow = true
-            o.receiveShadow = true
+            o.receiveShadow = false
           }
         })
         entry.vrm = vrm
