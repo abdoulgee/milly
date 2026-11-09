@@ -47,6 +47,11 @@ export const runtime = {
   },
   /** Who is currently speaking (mirrors the chat store for per-frame reads) */
   chat: { speaker: null as Speaker | null },
+  /** Screen position (CSS px) of the speech-bubble anchor above each head */
+  bubbles: {
+    her: { x: 0, y: 0, visible: false },
+    him: { x: 0, y: 0, visible: false },
+  } as Record<Speaker, { x: number; y: number; visible: boolean }>,
   camera: {
     yaw: 0,
     pitch: 0.36,

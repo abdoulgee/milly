@@ -4,6 +4,7 @@ import { BirthdayMessage } from './components/ui/BirthdayMessage'
 import { GameControls } from './components/ui/GameControls'
 import { PauseMenu } from './components/ui/PauseMenu'
 import { PhotoViewer } from './components/ui/PhotoViewer'
+import { SpeechBubbles } from './components/ui/SpeechBubbles'
 import { WelcomeScreen } from './components/ui/WelcomeScreen'
 import { useGameStore } from './store/gameStore'
 
@@ -17,6 +18,7 @@ export default function App() {
       <Suspense fallback={null}>
         <MuseumScene />
       </Suspense>
+      {phase === 'playing' && <SpeechBubbles />}
       <AnimatePresence>{phase === 'playing' && <GameControls key="controls" />}</AnimatePresence>
       <PhotoViewer />
       <PauseMenu />
