@@ -180,7 +180,7 @@ export const memories: Memory[] = [
     id: 'memory-005',
     image: '/memories/photo-005.jpg',
     title: 'Us',
-    caption: 'Side by side. My favourite place in the whole world is right next to you.',
+    caption: 'Side by side. My favourite place is right next to you.',
     date: 'Treasured',
     position: [WEST_X, 2.85, -10.25],
     rotation: ON_WEST_WALL,

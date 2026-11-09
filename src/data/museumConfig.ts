@@ -149,7 +149,7 @@ export const museumConfig = {
     /** What I call her — used in the chats (`{name}`), signs and the letter's greeting */
     nickname: 'Milly',
     wallHeadline: 'Happy Birthday',
-    wallSubtitle: 'to my Milly, my favourite person in the whole world',
+    wallSubtitle: 'to my Milly, with all my love',
     cakeActionLabel: 'Make a wish',
     cakeReplayLabel: 'Celebrate again',
     messageTitle: 'Happy Birthday',

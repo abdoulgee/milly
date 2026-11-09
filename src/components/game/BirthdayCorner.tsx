@@ -81,7 +81,7 @@ function WallMessage() {
       </Text>
       {/* Gold flourish lines */}
       {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 3.75, 2.66, 0]} material={materials.gold}>
+        <mesh key={s} position={[s * 2.4, 2.66, 0]} material={materials.gold}>
           <boxGeometry args={[0.6, 0.02, 0.01]} />
         </mesh>
       ))}

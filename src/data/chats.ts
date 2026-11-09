@@ -280,7 +280,7 @@ export const moments = {
   afterCelebration: [
     ['him', 'Happy birthday, my {name} ❤️'],
     ['her', 'This is the best birthday ever 🥹'],
-    ['him', 'You deserve the whole world.'],
-    ['her', 'You ARE my whole world 💗'],
+    ['him', 'You deserve every happiness.'],
+    ['her', 'And I have it, right here with you 💗'],
   ] as Conversation,
 }
